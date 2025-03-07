@@ -2,6 +2,11 @@
 #
 # Get latest from https://github.com/github/gitignore/blob/main/Unity.gitignore
 #
+
+# Jetbrain Rider Cache
+.idea/
+Assets/Plugins/Editor/JetBrains*
+
 /[Ll]ibrary/
 /[Tt]emp/
 /[Oo]bj/
@@ -63,7 +68,6 @@ sysinfo.txt
 
 # Crashlytics generated file
 crashlytics-build.properties
-*.idea
 
 # Packed Addressables
 /[Aa]ssets/[Aa]ddressable[Aa]ssets[Dd]ata/*/*.bin*
