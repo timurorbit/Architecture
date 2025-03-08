@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using CodeBase.Infrastructure.AssetManagement;
 using CodeBase.Infrastructure.Services.PersistentProgress;
 using CodeBase.Infrastructure.States;
@@ -11,6 +12,8 @@ namespace CodeBase.Infrastructure.Factory
         private readonly IAssets _assets;
         
         public List<ISavedProgressReader> ProgressReaders { get; } = new List<ISavedProgressReader>();
+        public GameObject HeroGameObject { get; set; }
+        public event Action HeroCreated;
         public List<ISavedProgress> ProgressWriters { get; } = new List<ISavedProgress>();
 
         public GameFactory(IAssets assets)
@@ -20,7 +23,9 @@ namespace CodeBase.Infrastructure.Factory
 
         public GameObject CreateHero(GameObject at)
         {
-            return InstantiateRegistered(AssetPath.HeroPath, at.transform.position);
+            HeroGameObject = InstantiateRegistered(AssetPath.HeroPath, at.transform.position);
+            HeroCreated?.Invoke();
+            return HeroGameObject;
         }
 
 
