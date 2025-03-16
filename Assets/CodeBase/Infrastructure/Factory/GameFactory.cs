@@ -29,9 +29,10 @@ namespace CodeBase.Infrastructure.Factory
         }
 
 
-        public void CreateHud(LoadLevelState loadLevelState)
+        public GameObject CreateHud()
         {
-            InstantiateRegistered(AssetPath.HudPath);
+           var hub = InstantiateRegistered(AssetPath.HudPath);
+           return hub;
         }
 
         public void Cleanup()

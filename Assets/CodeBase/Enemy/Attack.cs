@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Linq;
+using CodeBase.Hero;
 using CodeBase.Infrastructure.Factory;
 using CodeBase.Infrastructure.Services;
+using CodeBase.Logic;
 using UnityEngine;
 
 namespace CodeBase.Enemy
@@ -14,6 +16,7 @@ namespace CodeBase.Enemy
         public float AttackCooldown = 3f;
         public float Clevage = 0.5f;
         private float EffectiveDistance = 0.5f;
+        public float Damage = 10f;
 
         private IGameFactory _factory;
         private Transform _heroTransform;
@@ -46,6 +49,7 @@ namespace CodeBase.Enemy
             if (Hit(out Collider hit))
             {
                 PhysicsDebug.DrawDebug(StartPoint(), Clevage, 1);
+                hit.transform.GetComponent<IHealth>().TakeDamage(Damage);
             }
         }
 

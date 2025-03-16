@@ -1,7 +1,9 @@
 ﻿using CodeBase.CameraLogic;
+using CodeBase.Hero;
 using CodeBase.Infrastructure.Factory;
 using CodeBase.Infrastructure.Services.PersistentProgress;
 using CodeBase.Logic;
+using CodeBase.UI;
 using UnityEngine;
 
 namespace CodeBase.Infrastructure.States
@@ -9,14 +11,15 @@ namespace CodeBase.Infrastructure.States
     public class LoadLevelState : IPayloadedState<string>
     {
         private const string InitialPontTag = "InitialPoint";
-        
+
         private readonly GameStateMachine _stateMachine;
         private readonly SceneLoader _sceneLoader;
         private readonly LoadingCurtain _curtain;
         private readonly IGameFactory _gameFactory;
         private readonly IPersistentProgressService _progressService;
 
-        public LoadLevelState(GameStateMachine stateMachine, SceneLoader sceneLoader, LoadingCurtain curtain, IGameFactory gameFactory, IPersistentProgressService progressService)
+        public LoadLevelState(GameStateMachine stateMachine, SceneLoader sceneLoader, LoadingCurtain curtain,
+            IGameFactory gameFactory, IPersistentProgressService progressService)
         {
             _stateMachine = stateMachine;
             _sceneLoader = sceneLoader;
@@ -29,14 +32,14 @@ namespace CodeBase.Infrastructure.States
         {
             _curtain.Show();
             _gameFactory.Cleanup();
-           _sceneLoader.Load(sceneName, onLoaded); 
+            _sceneLoader.Load(sceneName, onLoaded);
         }
 
         private void onLoaded()
         {
             InitGameWorld();
             InformProgressReaders();
-            
+
             _stateMachine.Enter<GameLoopState>();
         }
 
@@ -51,14 +54,22 @@ namespace CodeBase.Infrastructure.States
         private void InitGameWorld()
         {
             var hero = _gameFactory.CreateHero(GameObject.FindWithTag(InitialPontTag));
-            _gameFactory.CreateHud(this);
-            
+            InitHud(hero: hero);
+
             CameraFollow(hero);
+        }
+
+        private void InitHud(GameObject hero)
+        {
+            var hud = _gameFactory.CreateHud();
+
+            hud.GetComponentInChildren<ActorUI>()
+                .Construct(hero.GetComponent<HeroHealth>());
         }
 
         private void CameraFollow(GameObject hero)
         {
-            Camera.main.GetComponent<CameraFollow>().Follow(hero);  
+            Camera.main.GetComponent<CameraFollow>().Follow(hero);
         }
 
         public void Exit()
